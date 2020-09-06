@@ -1,9 +1,19 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import api from './utils/api'
 import SearchBar from './components/SearchBar'
 
+interface VideoData {
+  response: {
+    data: {
+      items: {}[]
+    }
+  }
+}
+
 const App: React.FC = () => {
+  const [videoData, setVideoData] = useState<VideoData>()
+
   const fetchVideosHandler = async (keyword: string) => {
     const response = await api.get('/search', {
       params: {
@@ -11,8 +21,10 @@ const App: React.FC = () => {
       },
     })
 
-    console.log(response)
+    setVideoData(response.data.items)
   }
+
+  console.log(videoData)
 
   return (
     <div>
