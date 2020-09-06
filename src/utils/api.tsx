@@ -1,5 +1,6 @@
-import React from 'react'
 import axios from 'axios'
+
+const API_KEY = process.env.REACT_APP_YOUTUBE_API_KEY
 
 interface Params {
   baseURL: string
@@ -10,19 +11,13 @@ interface Params {
   }
 }
 
-const API_KEY = process.env.REACT_APP_YOUTUBE_API_KEY
-
-const api = () => {
-  const config: Params = {
-    baseURL: `https://www.googleapis.com/youtube/v3`,
-    params: {
-      part: 'snippet',
-      maxResults: 5,
-      key: API_KEY,
-    },
-  }
-
-  return axios.create(config)
+const config: Params = {
+  baseURL: `https://www.googleapis.com/youtube/v3`,
+  params: {
+    part: 'snippet',
+    maxResults: 5,
+    key: API_KEY,
+  },
 }
 
-export default api
+export default axios.create(config)
