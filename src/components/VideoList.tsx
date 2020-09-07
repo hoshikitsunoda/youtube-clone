@@ -1,42 +1,48 @@
 import React from 'react'
 
-interface Props {
-  videoData: {
-    kind: string
-    etag: string
-    id: {}
-    snippet: {
-      channelId: string
-      channelTitle: string
-      description: string
-      liveBroadcastContent: string
-      publishTime: string
-      publishedAt: string
-      thumbnails: {
-        default: {
-          url: string
-          width: number
-          height: number
-        }
-        high: {
-          url: string
-          width: number
-          height: number
-        }
-        medium: {
-          url: string
-          width: number
-          height: number
-        }
-      }
-      title: string
-    }
-  }[]
+export interface Image {
+  url: string
+  width: number
+  height: number
 }
 
-const VideoList = (props: any) => {
-  console.log(props)
-  return <div>List</div>
+export interface VideoData {
+  id: {
+    videoId: string
+  }
+  snippet: {
+    channelId: string
+    channelTitle: string
+    description: string
+    thumbnails: {
+      default: Image
+      high: Image
+      medium: Image
+    }
+    title: string
+  }
+}
+
+export interface Props {
+  videoData: VideoData[]
+}
+
+const VideoList: React.FC<Props> = ({ videoData }) => {
+  const list = videoData.map(({ id, snippet }) => {
+    return (
+      <div key={id.videoId} className="row-span-1 col-span-2 p-8">
+        <img
+          className="w-full"
+          src={snippet.thumbnails.default.url}
+          alt={snippet.title}
+        />
+        <p className="text-sm leading-5">{snippet.title}</p>
+        <p className="text-xs text-gray-700">{snippet.channelTitle}</p>
+      </div>
+    )
+  })
+
+  return <div className="w-3/12 column-start-2 row-span-1">{list}</div>
 }
 
 export default VideoList

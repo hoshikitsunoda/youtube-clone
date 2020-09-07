@@ -11,24 +11,11 @@ export interface Image {
 }
 
 export interface VideoData {
+  kind?: string
+  etag?: string
   id: {
     videoId: string
   }
-  snippet: {
-    channelId: string
-    channelTitle: string
-    description: string
-    thumbnails: {
-      default: Image
-      high: Image
-      medium: Image
-    }
-    title: string
-  }
-}
-
-export interface VideoListData {
-  id: string
   snippet: {
     channelId: string
     channelTitle: string
@@ -47,10 +34,10 @@ export interface VideoDataArray {
 }
 
 const App: React.FC = () => {
-  let videoDataList: VideoListData[] = []
-  const initialState = [] as VideoListData[]
+  let videoDataList: VideoData[] = []
+  const initialState: VideoData[] = []
 
-  const [videoData, setVideoData] = useState<VideoListData[]>(initialState)
+  const [videoData, setVideoData] = useState<VideoData[]>(initialState)
 
   const fetchVideosHandler = async (keyword: string) => {
     const response = await api.get<VideoDataArray>('/search', {
@@ -59,18 +46,8 @@ const App: React.FC = () => {
       },
     })
 
-    response.data.items.map((video) => {
-      const videoDataObj = {
-        id: video.id.videoId,
-        snippet: {
-          channelId: video.snippet.channelId,
-          channelTitle: video.snippet.channelTitle,
-          description: video.snippet.description,
-          thumbnails: video.snippet.thumbnails,
-          title: video.snippet.title,
-        },
-      }
-      videoDataList.push(videoDataObj)
+    response.data.items.map(({ etag, kind, ...videoProps }) => {
+      videoDataList.push(videoProps)
 
       return videoDataList
     })
@@ -79,9 +56,11 @@ const App: React.FC = () => {
   }
 
   return (
-    <div>
+    <div className="grid grid-rows-3">
       <SearchBar fetchVideo={fetchVideosHandler} />
-      <VideoList videoData={videoData} />
+      <div>
+        <VideoList videoData={videoData} />
+      </div>
     </div>
   )
 }
