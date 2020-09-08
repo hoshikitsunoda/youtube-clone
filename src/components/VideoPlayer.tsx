@@ -1,28 +1,8 @@
 import React from 'react'
-
-export interface Image {
-  url: string
-  width: number
-  height: number
-}
+import { VideoData } from '../types/types'
 
 export interface Props {
-  selectedVideo: {
-    id: {
-      videoId: string
-    }
-    snippet: {
-      channelId: string
-      channelTitle: string
-      description: string
-      thumbnails: {
-        default: Image
-        high: Image
-        medium: Image
-      }
-      title: string
-    }
-  }
+  selectedVideo: VideoData
 }
 
 const VideoPlayer: React.FC<Props> = ({ selectedVideo }) => {
@@ -31,7 +11,7 @@ const VideoPlayer: React.FC<Props> = ({ selectedVideo }) => {
   const videoSrc: string = `https://www.youtube.com/embed/${videoId}`
 
   return (
-    <div className="w-9/12 flex items-center flex-col p-8">
+    <div className="w-3/5 flex items-center flex-col p-8">
       <iframe
         src={videoSrc}
         frameBorder="0"
@@ -40,13 +20,15 @@ const VideoPlayer: React.FC<Props> = ({ selectedVideo }) => {
         title={videoId}
         allowFullScreen
       ></iframe>
-      <p className="text-base leading-5 text-left">
-        {selectedVideo.snippet.title}
-      </p>
-      <p className="text-sm text-gray-700 text-left">
-        {selectedVideo.snippet.channelTitle}
-      </p>
-      <p className="text-xs">{selectedVideo.snippet.description}</p>
+      <div className="p-8">
+        <p className="text-base leading-5 text-left my-4">
+          {selectedVideo.snippet.title}
+        </p>
+        <p className="text-sm text-gray-700 text-left mb-2">
+          {selectedVideo.snippet.channelTitle}
+        </p>
+        <p className="text-xs">{selectedVideo.snippet.description}</p>
+      </div>
     </div>
   )
 }

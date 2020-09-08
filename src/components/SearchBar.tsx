@@ -12,7 +12,7 @@ const SearchBar: React.FC<Props> = ({ fetchVideo }) => {
   }
 
   return (
-    <div className="p-8 flex row-span-3 shadow-md">
+    <div className="p-8 flex shadow-md">
       <input
         className="flex-initial bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 block w-full appearance-none leading-normal"
         type="text"

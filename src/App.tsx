@@ -5,30 +5,7 @@ import SearchBar from './components/SearchBar'
 import VideoList from './components/VideoList'
 import VideoPlayer from './components/VideoPlayer'
 
-export interface Image {
-  url: string
-  width: number
-  height: number
-}
-
-export interface VideoData {
-  kind?: string
-  etag?: string
-  id: {
-    videoId: string
-  }
-  snippet: {
-    channelId: string
-    channelTitle: string
-    description: string
-    thumbnails: {
-      default: Image
-      high: Image
-      medium: Image
-    }
-    title: string
-  }
-}
+import { VideoData } from '../src/types/types'
 
 export interface VideoDataArray {
   items: VideoData[]
@@ -43,24 +20,29 @@ const App: React.FC = () => {
   const [selectedVideo, setSelectedVideo] = useState<VideoData>(
     initialSelectedVideo
   )
+  const [errorMessage, setErrorMessage] = useState<string>('')
 
   const fetchVideosHandler = useCallback<(keyword: string) => Promise<void>>(
     async (keyword: string) => {
-      const {
-        data: { items },
-      } = await api.get<VideoDataArray>('/search', {
-        params: {
-          q: keyword,
-        },
-      })
+      try {
+        const {
+          data: { items },
+        } = await api.get<VideoDataArray>('/search', {
+          params: {
+            q: keyword,
+          },
+        })
 
-      items.map(({ etag, kind, ...videoProps }) => {
-        videoDataList.push(videoProps)
+        items.map(({ etag, kind, ...videoProps }) => {
+          videoDataList.push(videoProps)
 
-        return videoDataList
-      })
-      setSelectedVideo(videoDataList[0])
-      setVideoData(videoDataList)
+          return videoDataList
+        })
+        setSelectedVideo(videoDataList[0])
+        setVideoData(videoDataList)
+      } catch (error) {
+        setErrorMessage(error.toString())
+      }
     },
     [videoDataList]
   )
@@ -72,8 +54,12 @@ const App: React.FC = () => {
   return (
     <div>
       <SearchBar fetchVideo={fetchVideosHandler} />
-      <div className="flex mx-auto my-8 max-w-5xl">
-        <VideoPlayer selectedVideo={selectedVideo} />
+      <div className="flex mx-auto my-8 max-w-5xl justify-center">
+        {errorMessage ? (
+          <div>{errorMessage}</div>
+        ) : (
+          <VideoPlayer selectedVideo={selectedVideo} />
+        )}
         <VideoList videoData={videoData} selectVideo={selectVideoHandler} />
       </div>
     </div>
