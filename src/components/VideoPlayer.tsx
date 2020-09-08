@@ -1,28 +1,8 @@
 import React from 'react'
-
-export interface Image {
-  url: string
-  width: number
-  height: number
-}
+import { VideoData } from '../types/types'
 
 export interface Props {
-  selectedVideo: {
-    id: {
-      videoId: string
-    }
-    snippet: {
-      channelId: string
-      channelTitle: string
-      description: string
-      thumbnails: {
-        default: Image
-        high: Image
-        medium: Image
-      }
-      title: string
-    }
-  }
+  selectedVideo: VideoData
 }
 
 const VideoPlayer: React.FC<Props> = ({ selectedVideo }) => {

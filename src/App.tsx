@@ -5,30 +5,7 @@ import SearchBar from './components/SearchBar'
 import VideoList from './components/VideoList'
 import VideoPlayer from './components/VideoPlayer'
 
-export interface Image {
-  url: string
-  width: number
-  height: number
-}
-
-export interface VideoData {
-  kind?: string
-  etag?: string
-  id: {
-    videoId: string
-  }
-  snippet: {
-    channelId: string
-    channelTitle: string
-    description: string
-    thumbnails: {
-      default: Image
-      high: Image
-      medium: Image
-    }
-    title: string
-  }
-}
+import { VideoData } from '../src/types/types'
 
 export interface VideoDataArray {
   items: VideoData[]
