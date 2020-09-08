@@ -12,7 +12,7 @@ const VideoList: React.FC<Props> = ({ videoData, selectVideo }) => {
     return (
       <div
         key={id.videoId}
-        className="row-span-1 col-span-2 p-8"
+        className="p-8"
         onClick={() => selectVideo({ id, snippet })}
       >
         <img
@@ -26,7 +26,7 @@ const VideoList: React.FC<Props> = ({ videoData, selectVideo }) => {
     )
   })
 
-  return <div className="w-3/12 column-start-2 row-span-1">{list}</div>
+  return <div className="w-3/12">{list}</div>
 }
 
 export default VideoList
