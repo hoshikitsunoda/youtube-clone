@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 
 import api from './utils/api'
 import SearchBar from './components/SearchBar'
 import VideoList from './components/VideoList'
+import VideoPlayer from './components/VideoPlayer'
 
 export interface Image {
   url: string
@@ -35,31 +36,45 @@ export interface VideoDataArray {
 
 const App: React.FC = () => {
   let videoDataList: VideoData[] = []
-  const initialState: VideoData[] = []
+  const initialVideoList: VideoData[] = []
+  const initialSelectedVideo = {} as VideoData
 
-  const [videoData, setVideoData] = useState<VideoData[]>(initialState)
+  const [videoData, setVideoData] = useState<VideoData[]>(initialVideoList)
+  const [selectedVideo, setSelectedVideo] = useState<VideoData>(
+    initialSelectedVideo
+  )
 
-  const fetchVideosHandler = async (keyword: string) => {
-    const response = await api.get<VideoDataArray>('/search', {
-      params: {
-        q: keyword,
-      },
-    })
+  const fetchVideosHandler = useCallback<(keyword: string) => Promise<void>>(
+    async (keyword: string) => {
+      const {
+        data: { items },
+      } = await api.get<VideoDataArray>('/search', {
+        params: {
+          q: keyword,
+        },
+      })
 
-    response.data.items.map(({ etag, kind, ...videoProps }) => {
-      videoDataList.push(videoProps)
+      items.map(({ etag, kind, ...videoProps }) => {
+        videoDataList.push(videoProps)
 
-      return videoDataList
-    })
+        return videoDataList
+      })
+      setSelectedVideo(videoDataList[0])
+      setVideoData(videoDataList)
+    },
+    [videoDataList]
+  )
 
-    setVideoData(videoDataList)
+  const selectVideoHandler = (video: VideoData): void => {
+    setSelectedVideo(video)
   }
 
   return (
-    <div className="grid grid-rows-3">
+    <div>
       <SearchBar fetchVideo={fetchVideosHandler} />
-      <div>
-        <VideoList videoData={videoData} />
+      <div className="flex mx-auto my-8 max-w-5xl">
+        <VideoPlayer selectedVideo={selectedVideo} />
+        <VideoList videoData={videoData} selectVideo={selectVideoHandler} />
       </div>
     </div>
   )

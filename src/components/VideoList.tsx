@@ -25,12 +25,17 @@ export interface VideoData {
 
 export interface Props {
   videoData: VideoData[]
+  selectVideo: (video: any) => void
 }
 
-const VideoList: React.FC<Props> = ({ videoData }) => {
+const VideoList: React.FC<Props> = ({ videoData, selectVideo }) => {
   const list = videoData.map(({ id, snippet }) => {
     return (
-      <div key={id.videoId} className="row-span-1 col-span-2 p-8">
+      <div
+        key={id.videoId}
+        className="row-span-1 col-span-2 p-8"
+        onClick={() => selectVideo({ id, snippet })}
+      >
         <img
           className="w-full"
           src={snippet.thumbnails.default.url}
